@@ -3,21 +3,21 @@
 header('Access-Control-Allow-Origin: *');
 
 // Define database connection parameters
-$hn      = 'localhost';
-$un      = 'boilerroomapp';
-$pwd     = 'boilerroomapp';
-$db      = 'boilerroomapp';
-$cs      = 'utf8';
+$hn = 'localhost';
+$un = 'boilerroomapp';
+$pwd = 'boilerroomapp';
+$db = 'boilerroomapp';
+$cs = 'utf8';
 
 // Set up the PDO parameters
-$dsn  = "mysql:host=" . $hn . ";port=3306;dbname=" . $db . ";charset=" . $cs;
-$opt  = array(
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+$dsn = "mysql:host=" . $hn . ";port=3306;dbname=" . $db . ";charset=" . $cs;
+$opt = array(
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-    PDO::ATTR_EMULATE_PREPARES   => false,
+    PDO::ATTR_EMULATE_PREPARES => false,
 );
 // Create a PDO instance (connect to the database)
-$pdo  = new PDO($dsn, $un, $pwd, $opt);
+$pdo = new PDO($dsn, $un, $pwd, $opt);
 
 // Attempt to run PDO prepared statement
 try {
@@ -31,15 +31,14 @@ try {
         $stmt->execute();
         $row = $stmt->fetch();
 
+        $data = array(strtolower($row->Username), $row->Password);
+
         if (password_verify($password, $row->Password)) {
-            echo '1';
+            echo json_encode($data);
         } else {
             echo '0';
         }
     }
-}
-
-catch(PDOException $e)
-{
+} catch (PDOException $e) {
     echo $e->getMessage();
 }
