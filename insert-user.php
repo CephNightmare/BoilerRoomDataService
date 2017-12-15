@@ -22,37 +22,34 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 // Attempt to run PDO prepared statement
 try {
 
-    if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email'])) {
+    if (isset($_POST['first name']) && isset($_POST['last name']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['username'])) {
         $username = $_POST['username'];
+        $firstname = $_POST['first name'];
+        $lastname = $_POST['last name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        $selectUserStmt = $pdo->query('SELECT Username FROM users WHERE Username == ' . $username . 'LIMIT 1');
-        $selectUserStmt->execute();
-        $userRow = $stmt->fetch();
+        $timeTarget = 0.03; // 30 milliseconds
+        $cost = 8;
+        do {
+            $cost++;
+            $start = microtime(true);
+            password_hash("boilerroom", PASSWORD_BCRYPT, ["cost" => $cost]);
+            $end = microtime(true);
+        } while (($end - $start) < $timeTarget);
 
-        if (!empty($userRow)) {
-            $timeTarget = 0.03; // 30 milliseconds
-            $cost = 8;
-            do {
-                $cost++;
-                $start = microtime(true);
-                password_hash("test", PASSWORD_BCRYPT, ["cost" => $cost]);
-                $end = microtime(true);
-            } while (($end - $start) < $timeTarget);
+        $options = [
+            'cost' => $cost
+        ];
 
-            $options = [
-                'cost' => $cost
-            ];
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options);
 
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options);
+        $sql = "INSERT INTO `users` (Username, Password, Email, FirstName, LastName) VALUES ('$username', '$hashedPassword', '$email', '$firstname', '$lastname')";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
 
-            $sql = "INSERT INTO `users` (Username, Password, Email) VALUES ('$username', '$hashedPassword', '$email')";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute();
+        echo json_encode(array('message' => ''));
 
-            echo json_encode(array('message' => ''));
-        }
     }
 
     echo json_encode(array('message' => 0));
