@@ -22,11 +22,11 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 // Attempt to run PDO prepared statement
 try {
 
-    if (isset($_POST['first name']) && isset($_POST['last name']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['username'])) {
+    if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['password']) && isset($_POST['email_address']) && isset($_POST['username'])) {
         $username = $_POST['username'];
-        $firstname = $_POST['first name'];
-        $lastname = $_POST['last name'];
-        $email = $_POST['email'];
+        $firstname = $_POST['first_name'];
+        $lastname = $_POST['last_name'];
+        $email = $_POST['email_address'];
         $password = $_POST['password'];
 
         $timeTarget = 0.03; // 30 milliseconds
@@ -42,17 +42,34 @@ try {
             'cost' => $cost
         ];
 
+        $accountHash = md5( rand(0,1000) );
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options);
 
-        $sql = "INSERT INTO `users` (Username, Password, Email, FirstName, LastName) VALUES ('$username', '$hashedPassword', '$email', '$firstname', '$lastname')";
+        $sql = "INSERT INTO `users` (Username, Password, Email, FirstName, LastName, IsActivated, Hash) VALUES ('$username', '$hashedPassword', '$email', '$firstname', '$lastname', 0, '$accountHash')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
-        echo json_encode(array('message' => ''));
+        $current_id = $pdo->lastInsertId();
 
+        if (!empty($current_id)) {
+            $actual_link = "http://localhost:81/#/login?id=" . $current_id . "&hash=" . $accountHash;
+            $toEmail = $_POST["email_address"];
+            $subject = "Boilerroom - Activate account";
+            $content = "Click this link to activate your account. <a href=" . $actual_link . ">Activate account</a>";
+            $mailHeaders = "From: info@boilerroom.com\r\n";
+            $mailHeaders .= "MIME-Version: 1.0\r\n";
+            $mailHeaders .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+            mail($toEmail, $subject, $content, $mailHeaders);
+            unset($_POST);
+        }
+
+        echo json_encode(array('message' => 1));
+        return;
     }
 
     echo json_encode(array('message' => 0));
+    return;
 
 } catch (PDOException $e) {
     echo $e->getMessage();
