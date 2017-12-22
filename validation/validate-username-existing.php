@@ -56,10 +56,10 @@ if (!$link) {
             /* determine number of rows result set */
             $row_cnt = $result->num_rows;
 
-            if ($row_cnt > 0) {
-                echo json_encode(array('message' => 0));
+            if ($row_cnt == 0) {
+                echo json_encode(array('notOk' => 0));
             } else {
-                echo json_encode(array('message' => 1));
+                echo json_encode(array('ok' => 1));
             }
         }
 
