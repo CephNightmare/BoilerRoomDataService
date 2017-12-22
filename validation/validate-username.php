@@ -57,9 +57,9 @@ if (!$link) {
             $row_cnt = $result->num_rows;
 
             if ($row_cnt > 0) {
-                echo 1;
+                echo json_encode(array('message' => 0));
             } else {
-                echo 0;
+                echo json_encode(array('message' => 1));
             }
         }
 

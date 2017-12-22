@@ -64,11 +64,11 @@ try {
             unset($_POST);
         }
 
-        echo json_encode(array('message' => 1));
+        echo json_encode(array('inserted' => 1));
         return;
     }
 
-    echo json_encode(array('message' => 0));
+    echo json_encode(array('denied' => 1, 'message' => 'MISSINGVALUES'));
     return;
 
 } catch (PDOException $e) {

@@ -1,6 +1,8 @@
 <?php
-
 header('Access-Control-Allow-Origin: *');
+
+require 'vendor/autoload.php';
+use Firebase\JWT\JWT;
 
 // Define database connection parameters
 $hn = 'localhost';
@@ -31,13 +33,41 @@ try {
         $stmt->execute();
         $row = $stmt->fetch();
 
-        $data = array(strtolower($row->Username), $row->Password);
-
         if (password_verify($password, $row->Password)) {
-            echo json_encode($data);
+            $tokenArr = [
+                'iat'  => time(),         // Issued at: time when the token was generated
+                'jti'  => base64_encode(openssl_random_pseudo_bytes(32)),          // Json Token Id: an unique identifier for the token
+                'iss'  => gethostname(),       // Issuer
+                'nbf'  => time() + 1,        // Not before
+                'exp'  => time() + 3600,           // Expire
+                'data' => [                  // Data related to the signer user
+                    'userId'   => $row->ID,
+                    'userName' => $row->Username,
+                    'isActivated' => $row->IsActivated,
+                ]
+            ];
+
+            $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
+            $jwt = JWT::encode(
+                $tokenArr,      //Data to be encoded in the JWT
+                $secretKey, // The signing key
+                'HS512'     // Algorithm used to sign the token, see https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3
+            );
+
+            $unEncodedArray = [
+                'jwt' => $jwt,
+                'username' => $row->Username
+            ];
+
+            echo json_encode($unEncodedArray);
+            die;
         } else {
-            echo '0';
+            echo 0;
+            die;
         }
+    } else {
+        echo "no valid post";
+        die;
     }
 } catch (PDOException $e) {
     echo $e->getMessage();

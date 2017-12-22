@@ -27,10 +27,10 @@ try {
         $stmt = $pdo->prepare($query);
         $stmt->execute();
 
-        echo json_encode(array('message' => 1));
+        echo json_encode(array('activated' => 1));
 
     } else {
-        echo json_encode(array('message' => 0));
+        echo json_encode(array('denied'=> 1, 'message' => 'POSTERROR'));
     }
 
 } catch (PDOException $e) {
