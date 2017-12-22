@@ -38,7 +38,7 @@ try {
                 'iat'  => time(),         // Issued at: time when the token was generated
                 'jti'  => base64_encode(openssl_random_pseudo_bytes(32)),          // Json Token Id: an unique identifier for the token
                 'iss'  => gethostname(),       // Issuer
-                'nbf'  => time() + 1,        // Not before
+                'nbf'  => time(),        // Not before
                 'exp'  => time() + 3600,           // Expire
                 'data' => [                  // Data related to the signer user
                     'userId'   => $row->ID,
@@ -54,19 +54,26 @@ try {
                 'HS512'     // Algorithm used to sign the token, see https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3
             );
 
-            $unEncodedArray = [
+            $message = [
                 'jwt' => $jwt,
                 'username' => $row->Username
             ];
 
-            echo json_encode($unEncodedArray);
+            echo json_encode($message);
             die;
         } else {
-            echo 0;
+            $message = [
+                'denied' => 1,
+                'message' => "INVALID USERNAME OR PASSWORD"
+            ];
+            echo json_encode($message);
             die;
         }
     } else {
-        echo "no valid post";
+        $message = [
+            'denied' => 1,
+            'message' => "NO USERNAME OR PASSWORD"
+        ];
         die;
     }
 } catch (PDOException $e) {

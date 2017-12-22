@@ -40,6 +40,8 @@ if (!$link) {
                 'invalid' => 1,
                 'message' => "INVALIDTOKEN"
             ];
+            echo json_encode($message);
+            die;
         }
 
     } else {

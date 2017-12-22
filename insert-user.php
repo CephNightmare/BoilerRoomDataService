@@ -52,7 +52,7 @@ try {
         $current_id = $pdo->lastInsertId();
 
         if (!empty($current_id)) {
-            $actual_link = "http://localhost:81/#/login?id=" . $current_id . "&hash=" . $accountHash;
+            $actual_link = "http://localhost:81/login?id=" . $current_id . "&hash=" . $accountHash;
             $toEmail = $_POST["email_address"];
             $subject = "Boilerroom - Activate account";
             $content = "Click this link to activate your account. <a href=" . $actual_link . ">Activate account</a>";
