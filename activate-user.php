@@ -22,17 +22,17 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 // Attempt to run PDO prepared statement
 try {
 
-    if(!empty($_POST["id"])) {
+    if(isset($_POST["id"]) && isset($_POST["hash"])) {
         $query = "UPDATE users set IsActivated = 1 WHERE id='" . $_POST["id"]. "' AND Hash='" . $_POST["hash"]. "'";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
 
-        echo json_encode(array('activated' => 1));
+        echo json_encode(array('ok' => 1));
 
     } else {
-        echo json_encode(array('denied'=> 1, 'message' => 'POSTERROR'));
+        echo json_encode(array('ok' => 0));
     }
 
 } catch (PDOException $e) {
-    echo $e->getMessage();
+    echo json_encode(array('ok' => 0));
 }

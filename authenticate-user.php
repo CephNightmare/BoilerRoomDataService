@@ -54,28 +54,19 @@ try {
                 'HS512'     // Algorithm used to sign the token, see https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3
             );
 
-            $message = [
+            $message = array(
+                'ok' => 1,
                 'jwt' => $jwt,
                 'username' => $row->Username
-            ];
+            );
 
             echo json_encode($message);
-            die;
         } else {
-            $message = [
-                'denied' => 1,
-                'message' => "INVALID USERNAME OR PASSWORD"
-            ];
-            echo json_encode($message);
-            die;
+            echo json_encode(array('ok' => 0));
         }
     } else {
-        $message = [
-            'denied' => 1,
-            'message' => "NO USERNAME OR PASSWORD"
-        ];
-        die;
+        echo json_encode(array('ok' => 0));
     }
 } catch (PDOException $e) {
-    echo $e->getMessage();
+    echo json_encode(array('ok' => 0));
 }
