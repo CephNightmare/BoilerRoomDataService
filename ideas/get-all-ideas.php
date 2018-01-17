@@ -33,7 +33,7 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT * FROM ideas i LEFT JOIN ideaaccess a ON i.ID = a.ideaID LEFT JOIN users u ON i.OwnerID = a.userID";
+        $sql = "SELECT * FROM ideas i LEFT JOIN ideaaccess a ON i.ID = a.ideaID LEFT JOIN users u ON i.OwnerID = a.userID WHERE i.OwnerID = '".$userID."'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
