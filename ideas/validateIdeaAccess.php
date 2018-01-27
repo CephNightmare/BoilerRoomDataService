@@ -25,7 +25,7 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 
 try {
 
-    if (isset($_POST['jwt'])) {
+    if (isset($_POST['jwt']) && isset($_POST['ideaID'])) {
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
         $dataArray = validateUser($secretKey);
@@ -33,13 +33,18 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT i.* FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID WHERE i.OwnerID = '".$userID."' OR i.ID = a.ideaID";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
+        if ($result = $link->query("SELECT i.* FROM ideas i")) {
 
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            /* determine number of rows result set */
+            $row_cnt = $result->num_rows;
 
-        echo json_encode(array('ok' => 1, 'data' => $result));
+            if ($row_cnt > 0) {
+                echo json_encode(array('ok' => 1));
+            } else {
+                echo json_encode(array('ok' => 0));
+            }
+        };
+
         return;
     }
 
