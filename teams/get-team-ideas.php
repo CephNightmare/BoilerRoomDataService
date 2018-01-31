@@ -33,7 +33,7 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT i.* FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID WHERE i.OwnerID = '".$userID."' OR i.ID = a.ideaID";
+        $sql = "SELECT DISTINCT  i.*, t.teamName FROM ideas i LEFT JOIN teamideas ti ON i.ID = ti.ideaID LEFT JOIN teams t ON ti.teamID = t.ID LEFT JOIN teamaccess ta ON ta.userID = '".$userID."' WHERE (t.teamOwnerID = '".$userID."' OR t.ID = ta.teamID)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 

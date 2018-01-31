@@ -40,7 +40,7 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "INSERT INTO `ideas` (IdeaName, Category, ShortDescription, CreationDate, OwnerID) VALUES ('$ideaName', '$category', '$shortDescription', '$date', '$userID')";
+        $sql = "INSERT INTO `ideas` (ideaName, category, shortDescription, creationDate, ownerID) VALUES ('$ideaName', '$category', '$shortDescription', '$date', '$userID')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 

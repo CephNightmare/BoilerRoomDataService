@@ -45,7 +45,7 @@ try {
         $accountHash = md5( rand(0,1000) );
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options);
 
-        $sql = "INSERT INTO `users` (Username, Password, Email, FirstName, LastName, IsActivated, Hash) VALUES ('$username', '$hashedPassword', '$email', '$firstname', '$lastname', 0, '$accountHash')";
+        $sql = "INSERT INTO `users` (username, password, email, firstName, lastName, isActivated, hash) VALUES ('$username', '$hashedPassword', '$email', '$firstname', '$lastname', 0, '$accountHash')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 

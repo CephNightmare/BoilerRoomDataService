@@ -29,7 +29,7 @@ try {
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE Username = '" . $username . "' ORDER BY Username ASC LIMIT 1");
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = '" . $username . "' ORDER BY username ASC LIMIT 1");
         $stmt->execute();
         $row = $stmt->fetch();
 
@@ -42,8 +42,8 @@ try {
                 'exp'  => time() + 3600,           // Expire
                 'data' => [                  // Data related to the signer user
                     'userId'   => $row->ID,
-                    'userName' => $row->Username,
-                    'isActivated' => $row->IsActivated,
+                    'userName' => $row->username,
+                    'isActivated' => $row->isActivated,
                 ]
             ];
 
@@ -57,7 +57,7 @@ try {
             $message = array(
                 'ok' => 1,
                 'jwt' => $jwt,
-                'username' => $row->Username
+                'username' => $row->username
             );
 
             echo json_encode($message);

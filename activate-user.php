@@ -23,7 +23,7 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 try {
 
     if(isset($_POST["id"]) && isset($_POST["hash"])) {
-        $query = "UPDATE users set IsActivated = 1 WHERE id='" . $_POST["id"]. "' AND Hash='" . $_POST["hash"]. "'";
+        $query = "UPDATE users set isActivated = 1 WHERE ID='" . $_POST["id"]. "' AND hash='" . $_POST["hash"]. "'";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
 

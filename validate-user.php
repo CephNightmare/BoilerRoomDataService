@@ -22,7 +22,7 @@ if (!$link) {
             $tokenArray = (array)$token;
             $dataArray = (array)$tokenArray['data'];
 
-            if ($result = $link->query("SELECT * FROM users WHERE Username = '" . $dataArray['userName'] . "' and IsActivated = 1")) {
+            if ($result = $link->query("SELECT * FROM users WHERE username = '" . $dataArray['userName'] . "' and isActivated = 1")) {
 
                 $stmt = $link->stmt_init();
 
@@ -40,8 +40,8 @@ if (!$link) {
                         'exp' => time() + 3600,           // Expire
                         'data' => [                  // Data related to the signer user
                             'userId' => $row->ID,
-                            'userName' => $row->Username,
-                            'isActivated' => $row->IsActivated,
+                            'userName' => $row->username,
+                            'isActivated' => $row->isActivated,
                         ]
                     ];
 
@@ -55,7 +55,7 @@ if (!$link) {
                     $message = array(
                         'ok' => 1,
                         'jwt' => $jwt,
-                        'username' => $row->Username
+                        'username' => $row->username
                     );
 
                     echo json_encode($message);

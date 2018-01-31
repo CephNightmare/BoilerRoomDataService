@@ -33,7 +33,7 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT t.* FROM teams t LEFT JOIN teamaccess a ON a.teamID = t.ID WHERE t.TeamOwnerID = '".$userID."' OR t.ID = a.teamID";
+        $sql = "SELECT t.* FROM teams t LEFT JOIN teamaccess a ON a.teamID = t.ID WHERE t.teamOwnerID = '".$userID."' OR t.ID = a.teamID";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 

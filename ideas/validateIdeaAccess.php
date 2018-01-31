@@ -35,7 +35,7 @@ try {
 
         $date = date("Y-m-d H:i:s");
 
-        if ($result = $pdo->query("SELECT i.* FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID WHERE i.OwnerID = '".$userID."' AND i.ID = '".$ideaID."' OR a.ideaID = '".$ideaID."'")) {
+        if ($result = $pdo->query("SELECT i.* FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID WHERE i.ownerID = '".$userID."' AND i.ID = '".$ideaID."' OR a.ideaID = '".$ideaID."'")) {
 
             /* determine number of rows result set */
             $row_cnt = $result->rowCount();

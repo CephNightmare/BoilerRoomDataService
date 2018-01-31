@@ -14,7 +14,7 @@ if (!$link) {
 
         $email = $_POST['email'];
 
-        if ($result = $link->query("SELECT * FROM users WHERE Email = '". $email."'")) {
+        if ($result = $link->query("SELECT * FROM users WHERE email = '". $email."'")) {
 
             /* determine number of rows result set */
             $row_cnt = $result->num_rows;

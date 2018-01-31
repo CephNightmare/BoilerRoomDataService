@@ -13,7 +13,7 @@ if (!$link) {
 
             $username = $_POST['username'];
 
-            if ($result = $link->query("SELECT * FROM users WHERE Username = '". $username."'")) {
+            if ($result = $link->query("SELECT * FROM users WHERE username = '". $username."'")) {
 
                 /* determine number of rows result set */
                 $row_cnt = $result->num_rows;

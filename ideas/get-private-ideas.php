@@ -25,24 +25,21 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 
 try {
 
-    $formData = array();
-    parse_str($_POST['formData'], $formData);
-
-    if (isset($formData['Team_name']) && isset($_POST['jwt'])) {
-        $teamName = $formData['Team_name'];
+    if (isset($_POST['jwt'])) {
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
-
         $dataArray = validateUser($secretKey);
 
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "INSERT INTO `teams` (teamName, creationDate, teamOwnerID) VALUES ('$teamName', '$date', '$userID')";
+        $sql = "SELECT i.* FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID LEFT JOIN teamideas t ON t.ideaID = i.ID WHERE (i.ownerID = '".$userID."' OR i.ID = a.ideaID) AND t.ideaID IS NULL";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
-        echo json_encode(array('ok' => 1));
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        echo json_encode(array('ok' => 1, 'data' => $result));
         return;
     }
 
