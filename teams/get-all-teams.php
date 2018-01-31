@@ -25,28 +25,21 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 
 try {
 
-    if (isset($_POST['jwt']) && isset($_POST['ideaID'])) {
+    if (isset($_POST['jwt'])) {
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
         $dataArray = validateUser($secretKey);
 
-        $ideaID = $_POST['ideaID'];
         $userID = $dataArray['userId'];
-
         $date = date("Y-m-d H:i:s");
 
-        if ($result = $pdo->query("SELECT i.* FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID WHERE i.OwnerID = '".$userID."' AND i.ID = '".$ideaID."' OR a.ideaID = '".$ideaID."'")) {
+        $sql = "SELECT t.* FROM teams t LEFT JOIN teamaccess a ON a.teamID = t.ID WHERE t.TeamOwnerID = '".$userID."' OR t.ID = a.teamID";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
 
-            /* determine number of rows result set */
-            $row_cnt = $result->rowCount();
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            if ($row_cnt > 0) {
-                echo json_encode(array('ok' => 1, 'data' => $row_cnt));
-            } else {
-                echo json_encode(array('ok' => 0, 'data' => $row_cnt));
-            }
-        };
-
+        echo json_encode(array('ok' => 1, 'data' => $result));
         return;
     }
 
