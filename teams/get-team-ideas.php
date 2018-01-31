@@ -33,18 +33,33 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT DISTINCT  i.*, t.teamName FROM ideas i LEFT JOIN teamideas ti ON i.ID = ti.ideaID LEFT JOIN teams t ON ti.teamID = t.ID LEFT JOIN teamaccess ta ON ta.userID = '".$userID."' WHERE (t.teamOwnerID = '".$userID."' OR t.ID = ta.teamID)";
+        $sql = "SELECT DISTINCT  i.*, t.teamName FROM ideas i LEFT JOIN teamideas ti ON i.ID = ti.ideaID LEFT JOIN teams t ON ti.teamID = t.ID LEFT JOIN teamaccess ta ON ta.userID = '" . $userID . "' WHERE (t.teamOwnerID = '" . $userID . "' OR t.ID = ta.teamID)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
-        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $endResult = array();
 
-        echo json_encode(array('ok' => 1, 'data' => $result));
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if (!isset($endResult[$row['teamName']])) {
+                $endResult[$row['teamName']] = array(
+                    'teamName' => $row['teamName'],
+                    'ideas' => array());
+            }
+            $endResult[$row['teamName']]['ideas'][] = array(
+                'id' => $row['ID'],
+                'ideaName' => $row['ideaName'],
+                'category' => $row['category'],
+                'shortDescription' => $row['shortDescription']
+            );
+        }
+//            $result = $stmt->fetchAll(\PDO::FETCH_GROUP);
+
+        echo json_encode(array('ok' => 1, 'data' => $endResult));
         return;
+
+    } else {
+        echo json_encode(array('ok' => 0));
     }
-
-    echo json_encode(array('ok' => 0));
-
 } catch (\Exception $e) {
     echo json_encode(array('ok' => $e->getMessage()));
 }
