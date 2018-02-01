@@ -33,7 +33,7 @@ try {
         $stmt->execute();
         $row = $stmt->fetch();
 
-        if (password_verify($password, $row->Password)) {
+        if (password_verify($password, $row->password)) {
             $tokenArr = [
                 'iat'  => time(),         // Issued at: time when the token was generated
                 'jti'  => base64_encode(openssl_random_pseudo_bytes(32)),          // Json Token Id: an unique identifier for the token

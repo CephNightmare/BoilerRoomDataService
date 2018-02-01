@@ -46,7 +46,7 @@ try {
                     'ideas' => array());
             }
             $endResult[$row['teamName']]['ideas'][] = array(
-                'id' => $row['ID'],
+                'ID' => $row['ID'],
                 'ideaName' => $row['ideaName'],
                 'category' => $row['category'],
                 'shortDescription' => $row['shortDescription']
