@@ -2,8 +2,8 @@
 
 header('Access-Control-Allow-Origin: *');
 
-require '../vendor/autoload.php';
-require '../authentication/checkUserExpiry.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/authentication/checkUserExpiry.php';
 use Firebase\JWT\JWT;
 
 // Define database connection parameters
@@ -33,7 +33,11 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT DISTINCT  i.*, t.teamName FROM ideas i LEFT JOIN teamideas ti ON i.ID = ti.ideaID LEFT JOIN teams t ON ti.teamID = t.ID LEFT JOIN teamaccess ta ON ta.userID = '" . $userID . "' WHERE (t.teamOwnerID = '" . $userID . "' OR t.ID = ta.teamID)";
+        $sql = "SELECT DISTINCT  i.*, t.teamName FROM ideas i 
+                LEFT JOIN teamideas ti ON i.ID = ti.ideaID 
+                LEFT JOIN teams t ON ti.teamID = t.ID 
+                LEFT JOIN teamaccess ta ON ta.userID = '" . $userID . "' 
+                WHERE (t.teamOwnerID = '" . $userID . "' OR t.ID = ta.teamID)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 

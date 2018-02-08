@@ -2,8 +2,8 @@
 
 header('Access-Control-Allow-Origin: *');
 
-require '../vendor/autoload.php';
-require '../authentication/checkUserExpiry.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/authentication/checkUserExpiry.php';
 use Firebase\JWT\JWT;
 
 // Define database connection parameters
@@ -44,7 +44,9 @@ try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
-        echo json_encode(array('ok' => 1));
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        echo json_encode(array('ok' => 1, 'ideaID' => $pdo->lastInsertId()));
         return;
     }
 

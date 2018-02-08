@@ -28,8 +28,9 @@ try {
     $formData = array();
     parse_str($_POST['formData'], $formData);
 
-    if (isset($formData['Team_name']) && isset($_POST['jwt'])) {
-        $teamName = $formData['Team_name'];
+    if (isset($formData['Collection_name']) && isset($_POST['jwt']) && isset($formData['ideaID'])) {
+        $collectionName = $formData['Collection_name'];
+        $ideaID = $formData['ideaID'];
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
 
@@ -38,11 +39,13 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "INSERT INTO `teams` (teamName, creationDate, teamOwnerID) VALUES ('$teamName', '$date', '$userID')";
+        $sql = "INSERT INTO `cardcollections` (collectionName, ideaID, userID, creationDate) VALUES ('$collectionName', '$ideaID', '$userID', '$date')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
-        echo json_encode(array('ok' => 1));
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        echo json_encode(array('ok' => 1, 'ideaID' => $pdo->lastInsertId()));
         return;
     }
 
