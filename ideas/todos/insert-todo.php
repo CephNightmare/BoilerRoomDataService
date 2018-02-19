@@ -25,21 +25,27 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 
 try {
 
-    if (isset($_POST['jwt'])) {
+    $formData = array();
+    parse_str($_POST['formData'], $formData);
+
+    if (isset($formData['todo_Title']) && isset($_POST['jwt']) && isset($_POST['ideaID'])) {
+        $todoTitle = $formData['todo_Title'];
+        $ideaID = $_POST['ideaID'];
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
+
         $dataArray = validateUser($secretKey);
 
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT i.*, i.ID as ideaID FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID LEFT JOIN teamideas t ON t.ideaID = i.ID WHERE (i.ownerID = '".$userID."' OR i.ID = a.ideaID) AND t.ideaID IS NULL";
+        $sql = "INSERT INTO `todos` (ideaID, todoTitle, creationDate, assignedToUserID, todoStatus, isCompleted) VALUES ('$ideaID', '$todoTitle', '$date', '$userID', '', 0)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        echo json_encode(array('ok' => 1, 'data' => $result));
+        echo json_encode(array('ok' => 1));
         return;
     }
 

@@ -25,15 +25,15 @@ $pdo = new PDO($dsn, $un, $pwd, $opt);
 
 try {
 
-    if (isset($_POST['jwt'])) {
+    if (isset($_POST['jwt']) && isset($_POST['ideaID'])) {
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
         $dataArray = validateUser($secretKey);
-
+        $ideaID = $_POST['ideaID'];
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT i.*, i.ID as ideaID FROM ideas i LEFT JOIN ideaaccess a ON a.ideaID = i.ID LEFT JOIN teamideas t ON t.ideaID = i.ID WHERE (i.ownerID = '".$userID."' OR i.ID = a.ideaID) AND t.ideaID IS NULL";
+        $sql = "SELECT * FROM todos WHERE ideaID = '".$ideaID."'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
