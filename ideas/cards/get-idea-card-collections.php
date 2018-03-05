@@ -33,7 +33,7 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT * FROM todocategories WHERE ideaID = '".$ideaID."' OR isIntegrated = true";
+        $sql = "SELECT * FROM cardcollections WHERE ideaID = '" . $ideaID . "'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
@@ -41,10 +41,10 @@ try {
 
         echo json_encode(array('ok' => 1, 'data' => $result));
         return;
+
+    } else {
+        echo json_encode(array('ok' => 0));
     }
-
-    echo json_encode(array('ok' => 0));
-
 } catch (\Exception $e) {
     echo json_encode(array('ok' => $e->getMessage()));
 }

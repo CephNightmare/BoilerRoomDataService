@@ -28,10 +28,10 @@ try {
     $formData = array();
     parse_str($_POST['formData'], $formData);
 
-    if (isset($formData['Card_content']) && isset($_POST['jwt']) && isset($formData['ideaID']) && isset($formData['cardCollectionID'])) {
+    if (isset($formData['Card_content']) && isset($_POST['jwt']) && isset($_POST['ideaID']) && isset($formData['cardCollectionID'])) {
         $cardContent = $formData['Card_content'];
         $cardCollectionID = $formData['cardCollectionID'];
-        $ideaID = $formData['ideaID'];
+        $ideaID = $_POST['ideaID'];
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
 

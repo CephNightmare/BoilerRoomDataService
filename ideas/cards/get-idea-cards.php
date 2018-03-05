@@ -29,55 +29,17 @@ try {
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
         $dataArray = validateUser($secretKey);
-
         $ideaID = $_POST['ideaID'];
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "SELECT ca.*, ca.ID as cardID, cc.*, cc.ID as cardCollectionID FROM cardcollections cc LEFT JOIN cards ca ON cc.ID = ca.cardCollectionID WHERE cc.ideaID = '" . $ideaID . "' OR ca.ideaID = '" . $ideaID . "'";
+        $sql = "SELECT * FROM cards WHERE ideaID = '" . $ideaID . "'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
-        $row_cnt = $stmt->rowCount();
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        $endResult = array();
-
-//        $endResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//        echo json_encode(array('ok' => 1, 'data' => $endResult));
-//        die;
-
-        if($row_cnt > 0) {
-
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                if (!isset($endResult[$row['collectionName']])) {
-                    $endResult[$row['collectionName']] = array(
-                        'collectionName' => $row['collectionName'],
-                        'cardCollectionID' => $row['cardCollectionID'],
-                        'cards' => array());
-                }
-                $endResult[$row['collectionName']]['cards'][] = array(
-                    'ID' => $row['cardID'],
-                    'cardName' => $row['cardName']
-                );
-            }
-        } else {
-            $sql = "SELECT *, ID as cardCollectionID FROM cardcollections WHERE ideaID = '" . $ideaID . "'";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute();
-
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                if (!isset($endResult[$row['collectionName']])) {
-                    $endResult[$row['collectionName']] = array(
-                        'collectionName' => $row['collectionName'],
-                        'cardCollectionID' => $row['cardCollectionID'],
-                        'cards' => array());
-                }
-            }
-        }
-
-//            $result = $stmt->fetchAll(\PDO::FETCH_GROUP);
-
-        echo json_encode(array('ok' => 1, 'data' => $endResult));
+        echo json_encode(array('ok' => 1, 'data' => $result));
         return;
 
     } else {
