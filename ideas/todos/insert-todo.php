@@ -39,7 +39,7 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "INSERT INTO `todos` (ideaID, todoTitle, creationDate, assignedToUserID, todoStatus, isCompleted) VALUES ('$ideaID', '$todoTitle', '$date', '$userID', '', 0)";
+        $sql = "INSERT INTO `todos` (ideaID, todoTitle, creationDate, assignedToUserID, todoCategory, isCompleted) VALUES ('$ideaID', '$todoTitle', '$date', '$userID', 1, 0)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
