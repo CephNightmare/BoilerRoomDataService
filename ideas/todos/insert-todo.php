@@ -31,6 +31,7 @@ try {
     if (isset($formData['todo_Title']) && isset($_POST['jwt']) && isset($_POST['ideaID'])) {
         $todoTitle = $formData['todo_Title'];
         $ideaID = $_POST['ideaID'];
+        $categoryID = isset($formData['todoCategoryID']) ? $formData['todoCategoryID'] : 1;
 
         $secretKey = base64_decode("68476aba8a5e5b9e04888315496154034e1fb820");
 
@@ -39,7 +40,7 @@ try {
         $userID = $dataArray['userId'];
         $date = date("Y-m-d H:i:s");
 
-        $sql = "INSERT INTO `todos` (ideaID, todoTitle, creationDate, assignedToUserID, todoCategory, isCompleted) VALUES ('$ideaID', '$todoTitle', '$date', '$userID', 1, 0)";
+        $sql = "INSERT INTO `todos` (ideaID, todoTitle, creationDate, assignedToUserID, todoCategory, isCompleted) VALUES ('$ideaID', '$todoTitle', '$date', '$userID', $categoryID, 0)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
